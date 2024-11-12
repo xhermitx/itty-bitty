@@ -1,1 +1,1 @@
-module itty-bitty
+module github.com/xhermitx/itty-bitty
