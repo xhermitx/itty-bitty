@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"os"
 	"path/filepath"
 )
 
@@ -13,9 +14,5 @@ var (
 )
 
 func GetTemplatePath(fileName string) string {
-	//cwd, err := os.Getwd()
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	return filepath.Join("/app/internal/", fileName)
+	return filepath.Join(os.Getenv("VIEWS_PATH"), fileName)
 }

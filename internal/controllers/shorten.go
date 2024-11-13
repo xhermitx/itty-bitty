@@ -29,6 +29,12 @@ func (c *Controller) Shortener(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Parse the form to get the URL from the request body
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "Invalid form data", http.StatusBadRequest)
+		return
+	}
+
 	inputURL := r.FormValue("url")
 	validatedURL, err := c.svc.ValidateURL(inputURL)
 	if err != nil {
@@ -43,19 +49,16 @@ func (c *Controller) Shortener(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	path := utils.GetTemplatePath("shorten.html")
+	tmpl := template.Must(template.ParseFiles(path))
 	data := map[string]string{
 		"ShortURL": ittyBitty,
 	}
 
-	path := utils.GetTemplatePath("shorten.html")
-	t, err := template.ParseFiles(path)
-	if err != nil {
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
-	}
-	if err = t.Execute(w, data); err != nil {
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
+	// Set the content type and execute the template
+	w.Header().Set("Content-Type", "text/html")
+	if err := tmpl.Execute(w, data); err != nil {
+		http.Error(w, "oops! something broke", http.StatusInternalServerError)
 	}
 }
 

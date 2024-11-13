@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	"github.com/xhermitx/itty-bitty/internal/controllers"
 	"github.com/xhermitx/itty-bitty/internal/db"
 	"github.com/xhermitx/itty-bitty/internal/url"
@@ -16,6 +17,10 @@ func main() {
 		c     = controllers.NewController(svc)
 	)
 
+	if err := godotenv.Load(".env.dev"); err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
 		shortURL := request.URL.Path
 
@@ -26,10 +31,5 @@ func main() {
 		}
 	})
 	http.HandleFunc("/shorten", c.Shortener)
-
-	port, ok := os.LookupEnv("PORT")
-	if !ok {
-		log.Fatal("$PORT must be set")
-	}
-	log.Fatal(http.ListenAndServe(port, nil))
+	log.Fatal(http.ListenAndServe(os.Getenv("PORT"), nil))
 }
