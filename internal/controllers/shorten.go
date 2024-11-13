@@ -4,6 +4,7 @@ import (
 	"github.com/xhermitx/itty-bitty/internal/utils"
 	"html/template"
 	"net/http"
+	"os"
 )
 
 // UrlService defines a contract for a URL service
@@ -52,7 +53,7 @@ func (c *Controller) Shortener(w http.ResponseWriter, r *http.Request) {
 	path := utils.GetTemplatePath("shorten.html")
 	tmpl := template.Must(template.ParseFiles(path))
 	data := map[string]string{
-		"ShortURL": ittyBitty,
+		"ShortURL": os.Getenv("BASE_URL") + ittyBitty,
 	}
 
 	// Set the content type and execute the template

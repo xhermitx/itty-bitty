@@ -1,5 +1,5 @@
 <!-- Response returned to #shortenedUrlDisplay after shortening -->
 <div>
   <p>Your shortened URL is: <a href="/{{.ShortURL}}" target="_blank">http://localhost:8080/{{.ShortURL}}</a></p>
-  <button onclick="copyToClipboard('http://localhost:8080/{{.ShortURL}}')">Copy to clipboard</button>
+  <button onclick="copyToClipboard('{{.ShortURL}}')">Copy to clipboard</button>
 </div>
