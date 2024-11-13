@@ -6,14 +6,15 @@ import (
 	"github.com/xhermitx/itty-bitty/internal/url"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
-	urlDB := db.New()
-
-	svc := url.NewService(urlDB) // Pass a DB
-
-	c := controllers.NewController(svc)
+	var (
+		urlDB = db.New()
+		svc   = url.NewService(urlDB) // Pass a DB
+		c     = controllers.NewController(svc)
+	)
 
 	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
 		shortURL := request.URL.Path
@@ -25,5 +26,10 @@ func main() {
 		}
 	})
 	http.HandleFunc("/shorten", c.Shortener)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+
+	port, ok := os.LookupEnv("PORT")
+	if !ok {
+		log.Fatal("$PORT must be set")
+	}
+	log.Fatal(http.ListenAndServe(port, nil))
 }

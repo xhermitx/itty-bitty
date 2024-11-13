@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/xhermitx/itty-bitty/internal/utils"
 	"html/template"
 	"net/http"
 )
@@ -46,7 +47,8 @@ func (c *Controller) Shortener(w http.ResponseWriter, r *http.Request) {
 		"ShortURL": ittyBitty,
 	}
 
-	t, err := template.ParseFiles("internal/views/shorten.html")
+	path := utils.GetTemplatePath("shorten.html")
+	t, err := template.ParseFiles(path)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
@@ -65,6 +67,5 @@ func (c *Controller) Redirect(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
-
 	http.Redirect(w, r, originalURL, http.StatusPermanentRedirect)
 }

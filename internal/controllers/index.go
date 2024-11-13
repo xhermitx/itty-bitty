@@ -1,12 +1,14 @@
 package controllers
 
 import (
+	"github.com/xhermitx/itty-bitty/internal/utils"
 	"html/template"
 	"net/http"
 )
 
 func ShowIndex(w http.ResponseWriter, _ *http.Request) {
-	tmpl, err := template.ParseFiles("internal/views/index.html")
+	path := utils.GetTemplatePath("index.html")
+	tmpl, err := template.ParseFiles(path)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
