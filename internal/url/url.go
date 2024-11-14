@@ -1,7 +1,7 @@
 package url
 
 import (
-	"crypto/md5"
+	"crypto/sha256"
 	"encoding/hex"
 	"github.com/xhermitx/itty-bitty/internal/utils"
 	"net/url"
@@ -27,8 +27,9 @@ func NewService(db DB) *Service {
 
 // ShortenURL Implement the Shortening Logic
 func (s *Service) ShortenURL(originalURL string) (string, error) {
-	h := md5.New()
-	hash := h.Sum([]byte(originalURL))
+	h := sha256.New()
+	h.Write([]byte(originalURL))
+	hash := h.Sum(nil)
 	shortURL := hex.EncodeToString(hash)[:8]
 
 	if _, err := s.db.GetShortURL(originalURL); err == nil {
